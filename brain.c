@@ -5,7 +5,6 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <stdbool.h>
-#include <math.h>
 
 #include <xcb/xcb.h>
 #include <xcb/shm.h>
@@ -222,6 +221,40 @@ int main(void)
 			if(e->response_type == XCB_KEY_PRESS){
 				xcb_keysym_t sym = event_to_keysym(&ctx, e);
 				if(sym == XK_Escape || sym == XK_q) return 0;
+
+				// reset
+				if(sym == XK_r){
+					memset(ctx.shm_ptr, 0, WIN_W * WIN_H * 4);
+				}
+
+				// middle diamond thing
+				if(sym == XK_s){
+					uint32_t (*ptr)[WIN_W] = ctx.shm_ptr;
+					ptr[WIN_H/2+0][WIN_W/2+0] = STATE_FIRING;
+					ptr[WIN_H/2+0][WIN_W/2+1] = STATE_FIRING;
+					ptr[WIN_H/2+1][WIN_W/2+0] = STATE_FIRING;
+					ptr[WIN_H/2+1][WIN_W/2+1] = STATE_FIRING;
+				}
+
+				// horizontal generator thing
+				if(sym == XK_a){
+					uint32_t (*ptr)[WIN_W] = ctx.shm_ptr;
+
+					ptr[WIN_H/2+0][WIN_W/2-1] = STATE_FIRING;
+					ptr[WIN_H/2+0][WIN_W/2+2] = STATE_FIRING;
+					ptr[WIN_H/2+1][WIN_W/2-1] = STATE_FIRING;
+					ptr[WIN_H/2+1][WIN_W/2+2] = STATE_FIRING;
+				}
+
+				// vertical generator thing
+				if(sym == XK_d){
+					uint32_t (*ptr)[WIN_W] = ctx.shm_ptr;
+
+					ptr[WIN_H/2-1][WIN_W/2+0] = STATE_FIRING;
+					ptr[WIN_H/2-1][WIN_W/2+1] = STATE_FIRING;
+					ptr[WIN_H/2+2][WIN_W/2+0] = STATE_FIRING;
+					ptr[WIN_H/2+2][WIN_W/2+1] = STATE_FIRING;
+				}
 			}
 
 			if(e->response_type == XCB_MOTION_NOTIFY){

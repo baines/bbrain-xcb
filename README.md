@@ -4,3 +4,5 @@ automaton implemented for Linux/X11 with xcb.
 Drag with the cursor to start it off.
 
 License: MIT
+
+![Screenshot](/screenshot.png)
